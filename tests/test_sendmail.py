@@ -12,9 +12,9 @@ def test_sendmail(host):
     t = host.run(
         (
             'echo "'
-            'From: TestInfra <{sender}>\n'
-            'To: Canary `hostname` <{target}>\n'
-            'Subject: Test from `hostname` {token}\n'
+            "From: TestInfra <{sender}>\n"
+            "To: Canary `hostname` <{target}>\n"
+            "Subject: Test from `hostname` {token}\n"
             'Hello world of `hostname`."'
             " | sendmail -r {sender} {target}"
         ).format(sender=sender, target=target, token=token)
@@ -26,7 +26,9 @@ def test_sendmail(host):
         target, os.getenv("MAIL_PASSWORD")
     ) as mailbox:
         for i in range(10):
-            messages = list(mailbox.fetch(AND(from_=sender, subject=token), headers_only=True))
+            messages = list(
+                mailbox.fetch(AND(from_=sender, subject=token), headers_only=True)
+            )
             print(messages)
             if len(messages) > 0:
                 return
