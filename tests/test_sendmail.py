@@ -11,10 +11,11 @@ def test_sendmail(host):
 
     t = host.run(
         (
-            'echo "'#Return-Path: <{sender}>\n'
+            'echo "'
             'From: TestInfra <{sender}>\n'
-            'Subject: Test {token}\n'
-            'Hello world"'
+            'To: Canary `hostname` <{target}>\n'
+            'Subject: Test from `hostname` {token}\n'
+            'Hello world of `hostname`."'
             " | sendmail -r {sender} {target}"
         ).format(sender=sender, target=target, token=token)
     )
