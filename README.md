@@ -1,11 +1,12 @@
 Assert Mail
 ===========
 
-Test your mail configuration with [TestInfra](https://testinfra.readthedocs.io/en/latest/)
+Test your mail ✉️  configuration with [TestInfra](https://testinfra.readthedocs.io/en/latest/).
 
 ## Build
 
-Build the venv with `make` and set your environements, you need a canary imap account.
+Build the venv with `make` and set your environement variables,
+you need a canary imap account.
 
  * MAIL_SENDER
  * MAIL_TARGET
