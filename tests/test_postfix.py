@@ -15,7 +15,7 @@ def postfix_reader(iterator):
             current.seek(0)
             yield tuple(EQUAL.split(current.read(), 1))
             current = StringIO()
-        current.write(line)
+        current.write(line.lstrip())
     if current.tell():
         current.seek(0)
         yield tuple(EQUAL.split(current.read(), 1))
