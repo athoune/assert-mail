@@ -22,11 +22,13 @@ def postfix_reader(iterator):
 
 
 def test_postfix(host):
-    proto = dict(
-        postfix_reader(
-            host.file("/etc/postfix/main.cf.proto").content_string.split("\n")
+    if False:
+        proto = dict(
+            postfix_reader(
+                host.file("/etc/postfix/main.cf.proto").content_string.split("\n")
+            )
         )
-    )
+        print(proto)
     main = host.file("/etc/postfix/main.cf")
     assert main.exists
     for key, value in postfix_reader(main.content_string.split("\n")):
