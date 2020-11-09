@@ -22,15 +22,18 @@ def postfix_reader(iterator):
 
 
 def test_postfix(host):
-    proto = dict(postfix_reader(
-        host.file("/etc/postfix/main.cf.proto").content_string.split('\n')))
+    proto = dict(
+        postfix_reader(
+            host.file("/etc/postfix/main.cf.proto").content_string.split("\n")
+        )
+    )
     main = host.file("/etc/postfix/main.cf")
     assert main.exists
-    for key, value in postfix_reader(main.content_string.split('\n')):
-        if value.startswith('hash:'):
-            path = value.split(':', 1)[1]
+    for key, value in postfix_reader(main.content_string.split("\n")):
+        if value.startswith("hash:"):
+            path = value.split(":", 1)[1]
             assert host.file(path).exists, "%s doesn't exist" % path
             assert host.file("%s.db" % path).exists, "%s.db doesn't exist" % path
-        if value.startswith('regexp:'):
-            path = value.split(':', 1)[1]
+        if value.startswith("regexp:"):
+            path = value.split(":", 1)[1]
             assert host.file(path).exists, "%s doesn't exist" % path
