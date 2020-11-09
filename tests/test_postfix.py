@@ -7,7 +7,10 @@ SPACES = re.compile(r"^\s+")
 
 
 def postfix_reader(iterator):
-    "Read postfix config lines, and yield key, value."
+    """
+    Read postfix config lines, and yield key, value.
+    See https://www.oreilly.com/library/view/postfix-the-definitive/0596002122/ch04s02.html
+    """
     current = StringIO()
     for line in iterator:
         if line.strip() == "" or line.startswith("#"):
