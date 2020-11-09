@@ -2,7 +2,8 @@ from io import StringIO
 import re
 
 
-EQUAL = re.compile(" += +")
+EQUAL = re.compile(r" *= *")
+SPACES = re.compile(r"^\s+")
 
 
 def postfix_reader(iterator):
@@ -10,7 +11,7 @@ def postfix_reader(iterator):
     for line in iterator:
         if line.strip() == "" or line.startswith("#"):
             continue
-        if line[0] != " " and current.tell():
+        if not SPACES.search(line) and current.tell():
             current.seek(0)
             yield tuple(EQUAL.split(current.read(), 1))
             current = StringIO()
@@ -21,6 +22,8 @@ def postfix_reader(iterator):
 
 
 def test_postfix(host):
+    proto = dict(postfix_reader(
+        host.file("/etc/postfix/main.cf.proto").content_string.split('\n')))
     main = host.file("/etc/postfix/main.cf")
     assert main.exists
     for key, value in postfix_reader(main.content_string.split('\n')):
@@ -28,4 +31,6 @@ def test_postfix(host):
             path = value.split(':', 1)[1]
             assert host.file(path).exists, "%s doesn't exist" % path
             assert host.file("%s.db" % path).exists, "%s.db doesn't exist" % path
-
+        if value.startswith('regexp:'):
+            path = value.split(':', 1)[1]
+            assert host.file(path).exists, "%s doesn't exist" % path
