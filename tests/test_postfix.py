@@ -1,18 +1,18 @@
-from io import StringIO
 import re
-
+from io import StringIO
+from typing import Generator, Iterable, Tuple
 
 EQUAL = re.compile(r" *= *")
 SPACES = re.compile(r"^\s+")
 
 
-def postfix_reader(iterator):
+def postfix_reader(lines: Iterable[str]) -> Generator[Tuple[str, ...], None, None]:
     """
     Read postfix config lines, and yield key, value.
     See https://www.oreilly.com/library/view/postfix-the-definitive/0596002122/ch04s02.html
     """
     current = StringIO()
-    for line in iterator:
+    for line in lines:
         if line.strip() == "" or line.startswith("#"):
             # empty line or line starting with #
             continue
@@ -41,9 +41,9 @@ def test_postfix(host):
         if value.startswith("hash:"):
             # assert that toto exists with hash:/toto
             path = value.split(":", 1)[1]
-            assert host.file(path).exists, "%s doesn't exist" % path
-            assert host.file("%s.db" % path).exists, "%s.db doesn't exist" % path
+            assert host.file(path).exists, f"{path} doesn't exist"
+            assert host.file(f"{path}.db").exists, f"{path}.db doesn't exist"
         if value.startswith("regexp:"):
             # assert that toto exists with regexp:/toto
             path = value.split(":", 1)[1]
-            assert host.file(path).exists, "%s doesn't exist" % path
+            assert host.file(path).exists, f"{path} doesn't exist"

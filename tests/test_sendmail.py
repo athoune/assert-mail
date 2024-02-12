@@ -1,8 +1,8 @@
 import os
-import uuid
 import time
+import uuid
 
-from imap_tools import MailBox, AND
+from imap_tools import AND, MailBox
 
 
 def test_sendmail(host):
@@ -22,15 +22,15 @@ def test_sendmail(host):
     t = host.run(  # shell command with `sendmail`
         (
             'echo "'
-            "From: TestInfra <{sender}>\n"
-            "To: Canary `hostname` <{target}>\n"
-            "Subject: Test from `hostname` {token}\n"
+            f"From: TestInfra <{sender}>\n"
+            f"To: Canary `hostname` <{target}>\n"
+            f"Subject: Test from `hostname` {token}\n"
             'Hello world of `hostname`."'
-            " | sendmail -r {sender} {target}"
-        ).format(sender=sender, target=target, token=token)
+            f" | sendmail -r {sender} {target}"
+        )
     )
     print(t)
-    assert t.exit_status == 0, "sendmail command failed with %s" % t.stderr
+    assert t.exit_status == 0, f"sendmail command failed with {t.stderr}"
 
     server = os.getenv("MAIL_IMAP")
     passwd = os.getenv("MAIL_PASSWORD")
@@ -44,6 +44,4 @@ def test_sendmail(host):
             time.sleep(1)  # Wait before retry
     assert (
         False
-    ), "Mail {token} not found in IMAP account {target} of {server} in 10s".format(
-        token=token, target=target, server=server
-    )
+    ), f"Mail {token} not found in IMAP account {target} of {server} in 10s"
